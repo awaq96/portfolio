@@ -4,7 +4,7 @@ import { enterpriseProjects } from "@/content/projects/enterprise";
 
 export default function EnterpriseSection() {
   return (
-    <section id="enterprise" className="border-t border-foreground/10 max-w-5xl mx-auto px-6 py-24">
+    <section id="enterprise" className="border-t border-foreground/10 max-w-5xl mx-auto px-6 py-12 sm:py-24">
       <SectionHeading>Enterprise Experience</SectionHeading>
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {enterpriseProjects.map((p) => (

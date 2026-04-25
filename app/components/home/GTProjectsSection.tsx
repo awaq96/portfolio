@@ -18,7 +18,7 @@ const projects = [
 
 export default function GTProjectsSection() {
   return (
-    <section className="border-t border-foreground/10 max-w-5xl mx-auto px-6 py-24">
+    <section className="border-t border-foreground/10 max-w-5xl mx-auto px-6 py-12 sm:py-24">
       <SectionHeading>Georgia Tech Projects</SectionHeading>
       <div className="grid sm:grid-cols-2 gap-4">
         {projects.map((p) => (

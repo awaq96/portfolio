@@ -1,6 +1,6 @@
 export default function Intro() {
   return (
-    <section className="min-h-[88vh] flex flex-col justify-center max-w-5xl mx-auto px-6 py-24">
+    <section className="min-h-[88vh] flex flex-col justify-center max-w-5xl mx-auto px-6 py-12 sm:py-24">
       <p className="text-sm text-foreground/40 mb-4 tracking-widest uppercase">
         Lead Software Engineer
       </p>

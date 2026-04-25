@@ -19,7 +19,7 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
   if (!project) notFound();
 
   return (
-    <main className="max-w-3xl mx-auto px-6 py-24">
+    <main className="max-w-3xl mx-auto px-6 py-12 sm:py-24">
       <Link
         href="/#enterprise"
         className="text-sm text-foreground/40 hover:text-foreground transition-colors mb-12 inline-block"
