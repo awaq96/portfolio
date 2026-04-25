@@ -14,14 +14,14 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  --background: #0d0f1e;
+  --foreground: #e2e8f0;
   }
 }
 
 .dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  --background: #0d0f1e;
+  --foreground: #e2e8f0;
 }
 
 /* Declared after the media query so it wins the cascade when user manually picks light */
