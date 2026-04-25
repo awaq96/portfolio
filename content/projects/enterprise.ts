@@ -98,7 +98,7 @@ I also replaced a fragile database link to the Equipment Catalog with a Kafka-ba
     period: "2023 – Present",
     description:
       "Led a 6-engineer team upgrading 80+ microservices from Java 8 to 17 and Spring Boot 2.x to 3.3, using AI-assisted tooling to cut per-service upgrade time from days to hours.",
-    tags: ["Java", "Spring Boot", "GitHub Copilot", "Agentic AI"],
+    tags: ["Java", "Spring Boot", "Agentic AI", "GitHub Copilot"],
     metrics: ["80+ services", "3 months vs. 12 estimated", "2-4 days to 4 hours", "70% automated"],
     sections: [
       {
