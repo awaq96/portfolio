@@ -93,29 +93,42 @@ I also replaced a fragile database link to the Equipment Catalog with a Kafka-ba
   },
   {
     slug: "att-microservices-modernization",
-    title: "Microservices Modernization",
+    title: "Agentic Microservices Modernization",
     company: "AT&T",
     period: "2023 – Present",
     description:
-      "Led a 6-engineer team upgrading 80+ microservices from Java 8 to 17 and Spring Boot 2.x to 3.3.",
-    tags: ["Java", "Spring Boot", "JUnit 5", "GitHub Copilot", "AI"],
-    metrics: ["80+ services", "70% faster upgrades", "90% code coverage", "2 days → 4 hours"],
+      "Led a 6-engineer team upgrading 80+ microservices from Java 8 to 17 and Spring Boot 2.x to 3.3, using AI-assisted tooling to cut per-service upgrade time from days to hours.",
+    tags: ["Java", "Spring Boot", "GitHub Copilot", "Agentic AI"],
+    metrics: ["80+ services", "3 months vs. 12 estimated", "2-4 days to 4 hours", "70% automated"],
     sections: [
       {
         heading: "Overview",
-        content: "[Placeholder]",
+        content: `Our team's application is composed of 80 microservices built on Java 8 and Spring Boot 2.x. With Spring Boot 2.x reaching end of life, staying on unsupported software was not an option. Java 8 was also EOL, so both had to be upgraded together. I led the effort to bring the entire service catalog up to supported versions.
+
+This project had a second dimension to it: I used it as an opportunity to experiment with AI-assisted engineering and see how much of a large, repetitive migration could be automated.`,
       },
       {
         heading: "The Challenge",
-        content: "[Placeholder]",
+        content: `The original plan was to move to Java 21 and Spring Boot 4, the latest available versions. AT&T's security policies for offshore developers capped the supported Java version at 17, and the compatible Spring Boot version was 3.3. Since Spring Boot 4 requires Java 21 as its minimum, both targets had to come down together. Java 17 and Spring Boot 3.3 were the ceiling we could actually use.
+
+Manual estimates put the effort at 9 to 12 months across 80 services. Each service required the same categories of changes: POM dependency updates, removal of deprecated APIs, and several framework-specific migration paths. No novel business logic was involved, just repetitive, well-documented work that developers across the industry had already done thousands of times. That made it a strong candidate for automation.`,
       },
       {
         heading: "What I Built",
-        content: "[Placeholder]",
+        content: `Before writing a single prompt, I manually upgraded two services to build a solid understanding of what actually needed to happen at each step. Then I spent two weeks researching and iterating on prompts using GitHub Copilot in VS Code.
+
+My first attempt was a single prompt to handle the full upgrade. The results were inconsistent: sometimes the POM updated correctly, sometimes it did not. Also the service layer changes were unreliable. I broke the problem down into four targeted prompts, each scoped to one category of change.
+
+The first prompt handled POM updates: bumping Java, Spring, and Spring Boot versions and replacing dependencies with compatible ones. I included my manually upgraded POM as a reference and explicitly called out fields the model consistently missed. 
+The second prompt covered AJSC removal. AJSC was AT&T's internal framework for on-premises hosting. With the company now on Azure, AJSC was unsupported and incompatible with Java 17, so it needed to be replaced. The third prompt handled service layer deprecations: javax to jakarta, Date to LocalDateTime, and other API changes that Spring Boot 3.x introduced. The fourth migrated Swagger from Springfox to springdoc-openapi, including annotation updates and the removal of the Docket configuration class.
+
+The workflow for each service: run the prompts, review the output, build and start the app, fix any failures, run a few API calls to verify functionality, then move to the next service. AI handled about 70 percent of each upgrade consistently. I kept a shared markdown file where the team logged every manual fix the prompts missed. I fed it back into each prompt run as a list of previously missed items. This helped close some gaps, but getting from 70 to 100 percent would have required a level of fine-tuning that was not worth the investment.
+
+I ran knowledge transfer sessions throughout so the team could work on services in parallel while I developed later prompts. I reviewed every PR and mentored developers through the manual fixes.`,
       },
       {
         heading: "Outcome",
-        content: "[Placeholder]",
+        content: `What was estimated at 9 to 12 months took 3 months. A per-service upgrade that used to take 2 to 4 days came down to 4 hours, with GitHub Copilot handling the bulk of the repetitive work. After we finished, I demo'd the workflow and shared the prompts with teams across AT&T. Three teams have since reached out to reuse them for their own migration efforts.`,
       },
     ],
   },
