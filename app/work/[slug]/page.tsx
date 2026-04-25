@@ -57,8 +57,14 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
       <div className="space-y-12">
         {project.sections.map((s) => (
           <section key={s.heading}>
-            <h2 className="text-lg font-semibold mb-3">{s.heading}</h2>
-            <p className="text-foreground/70 leading-relaxed">{s.content}</p>
+            <h2 className="text-lg font-semibold mb-4">{s.heading}</h2>
+            <div className="space-y-4">
+              {s.content.split("\n\n").map((paragraph, i) => (
+                <p key={i} className="text-foreground/70 leading-relaxed">
+                  {paragraph}
+                </p>
+              ))}
+            </div>
           </section>
         ))}
       </div>
