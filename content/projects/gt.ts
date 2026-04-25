@@ -77,4 +77,65 @@ The mechanism is straightforward: at impact=0.0 the LONG and SHORT thresholds ar
       },
     ],
   },
+  {
+    slug: "enron-fraud-detection",
+    title: "Enron Email Fraud Detection Pipeline",
+    course: "INTA 6450:Data Analysis",
+    institution: "Georgia Tech",
+    period: "Spring 2026",
+    description:
+      "Group project analyzing 500,000 emails to discover evidence of market manipulation during the California energy crisis. A four phase pipeline combining network analysis, temporal filtering, custom NLP lexicons, and composite risk scoring to narrow the corpus to the 50 highest risk emails.",
+    tags: ["Python", "NetworkX", "NLP", "VADER", "Pandas", "NumPy", "Regex"],
+    metrics: ["500K emails processed", "4 phase cascading funnel", "18 convicted individuals cross referenced"],
+    sections: [
+      {
+        heading: "Overview",
+        content: `The Enron scandal is one of the most well documented cases of corporate fraud in American history. When Enron collapsed in 2001, investigators released roughly 500,000 internal emails that have since become a standard research dataset. The challenge is not finding the corpus, it is making sense of it. The vast majority of emails are routine: scheduling, HR, forwarded news articles, and meeting logistics. The wrongdoing is buried inside operational communications that look, on the surface, like normal trading desk activity.
+
+This project was a group effort with three classmates for INTA 6450 at Georgia Tech. The goal was to build a pipeline that could take the entire raw corpus and deterministically surface the emails most likely to contain evidence of constructive fraud. We focused specifically on the market manipulation Enron's West Power Trading Desk ran during California's 2000 to 2001 energy crisis. The wrongdoing we targeted was the "Ricochet" scheme: purchasing price capped California power, exporting it to Oregon or Nevada, and reimporting it back into California as "out of state" power exempt from price caps. That arbitrage left a very specific communication trail between schedulers and traders, which gave us a behavioral fingerprint to search for.`,
+      },
+      {
+        heading: "Phase 1: Network and Actor Filtering",
+        content: `The first phase builds a directed communication graph from every email header in the corpus using NetworkX. Each unique email address is a node; each sent message creates a directed edge. With 500,000 emails that produces a graph with tens of thousands of nodes, so we used sampled betweenness centrality (k=200 nodes) to identify which addresses served as bridges in the communication network without waiting hours for an exact computation.
+
+We focused on the West Power Trading Desk because that is where the California manipulation was operationally coordinated. Before running the graph analysis we hand mapped every known email alias for 15 West Desk actors from FERC dockets and DOJ plea records. Tim Belden alone had four different email addresses in the corpus. Without that alias resolution, the graph would treat each variant as a separate node and undercount their centrality.
+
+The top 15 West Desk actors by centrality became the seeds of an ego network: every node they sent to or received from was pulled into Phase 1. We also injected the full list of 18 convicted individuals as mandatory includes. That filter reduced 500,000 emails to roughly 165,000.`,
+      },
+      {
+        heading: "Phase 2: Temporal Masking",
+        content: `Phase 2 restricts the dataset to emails sent within 48 hours of a known CAISO Stage 3 emergency or rolling blackout. Those 16 dates span June 2000 through June 2001 and were sourced from FERC reports on the crisis. The reasoning is straightforward: if traders were actively coordinating market manipulation during grid emergencies, the email traffic around those events is where that coordination would appear.
+
+We implemented this using NumPy broadcasting rather than looping over each email. The array of email timestamps and the array of 16 crisis dates are broadcast against each other to compute a full distance matrix in one operation, then we take the row wise minimum to get each email's proximity to the nearest crisis. Anything within 48 hours passes. This ran on the 165,000 Phase 1 emails in seconds and reduced the corpus to about 11,000.`,
+      },
+      {
+        heading: "Phase 3: Linguistic Feature Extraction",
+        content: `Phase 3 scores every remaining email against three custom lexicons we built by researching the specific language Enron traders used internally and in FERC investigation records.
+
+The gaming lexicon (55 terms) targets manipulation specific vocabulary: "Death Star", "Fat Boy", "Ricochet", "megawatt laundering", "round trip", "wash trade". These terms were coined internally by the trading desk and have no legitimate use in normal grid operations. The hedging lexicon (48 terms) looks for distancing and uncertainty language: "probably", "should appear", "we think", "it seems". That pattern of deliberate vagueness tends to appear in emails where someone is trying to create deniability. The optics lexicon (55 terms) targets impression management phrases: "make the numbers work", "keep this quiet", "avoid the optics", "off the record".
+
+On top of the lexicons we ran VADER sentiment analysis on the original authored text of each email, not the quoted chains. The flag we care about is anomalously positive sentiment during a blackout. Normal grid professionals treat rolling blackouts as failures. Enron traders viewed them as profit opportunities, so celebration language near crisis dates is a behavioral signal.
+
+Each email also gets scored against sets of California operations terms, suspicious mechanics terms, transaction terms, and concealment terms. The combination of signals determines whether an email passes a hard gate into Phase 4 or gets filtered out. We also built explicit exclusion logic for news digests, forwarded announcements, regulatory summaries, and deal confirmation workflow, all of which generate false positives if you just count lexicon hits without context.`,
+      },
+      {
+        heading: "Composite Risk Scoring",
+        content: `Phase 4 produces a 0 to 1 composite risk score for each surviving email using a weighted linear combination of the normalized Phase 3 signals. The base formula weighted gaming highest at 35%, temporal proximity at 20%, optics at 15%, hedging at 15%, and sentiment anomaly at 10%. We also applied an actor boost for emails involving West Desk members or convicted individuals, and an interaction boost for emails where gaming, California operations, and transaction signals all fired simultaneously.
+
+We also used logistic regression to validate and calibrate the core weights. The model was fit on the Phase 2 emails with convicted person involvement as the binary label. The resulting coefficient magnitudes gave us a data driven check on our manual weights, and in most runs they agreed closely with the hand tuned values.
+
+Evidence tier classification ran separately from the score. An email could be tagged "direct" (contains a smoking gun term or the combination of strong gaming plus suspicious mechanics), "supporting" (California operations plus transaction activity plus concealment or actor involvement), or "none". The tier did not change the numeric ranking but gave reviewers a way to understand why an email scored high.`,
+      },
+      {
+        heading: "Results and Findings",
+        content: `The pipeline narrowed 500,000 raw emails to 50 highest risk operational communications. The funnel: 500K raw, 249K after deduplication (the corpus stores each email in every recipient's mailbox, so a 10 person thread produces 10 copies), 165K after Phase 1, 11K after Phase 2, and then the final scoring ranked those down to the top 50.
+
+The most interesting finding was that none of the top 5 ranked emails came from a convicted individual as the sender, though several were sent to them. Our analysis suggests two reasons. Convicted executives were careful about committing plans to writing, so the operational instructions often traveled through subordinates or were given verbally. The people who actually sent emails discussing the mechanics were the schedulers and desk traders carrying out the trades, not the executives who designed the schemes. The pipeline surfaced that layer of the organization rather than the executives everyone already knew about.
+
+Lexicon rate comparisons confirmed the model was discriminating correctly: emails involving convicted individuals showed significantly higher rates of gaming, hedging, and optics hits than the general Phase 2 population. But those convicted individuals were not the top ranked senders by mean risk score. That list was entirely non convicted employees whose emails showed direct operational coordination language around crisis dates.
+
+The paper also identified several areas for future improvement: replacing the static lexicons with a feedback loop that dynamically expands vocabulary based on high scoring results, replacing linear weights with an exponential or logarithmic cost function for sharper differentiation, and building a labeled training set to move weight optimization from manual heuristics to supervised learning.`,
+      },
+    ],
+  },
 ];
