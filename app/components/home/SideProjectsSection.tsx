@@ -7,14 +7,14 @@ const projects = [
     description:
       "Lorem ipsum description of the side project — what it does, why you built it, and anything interesting about the implementation.",
     tags: ["TypeScript", "Next.js", "Postgres"],
-    link: "https://github.com/asherwaqar",
+    href: "https://github.com/asherwaqar",
   },
   {
     title: "Side Project Two [placeholder]",
     description:
       "Lorem ipsum description of the side project — what it does, why you built it, and anything interesting about the implementation.",
     tags: ["Python", "FastAPI", "Redis"],
-    link: "https://github.com/asherwaqar",
+    href: "https://github.com/asherwaqar",
   },
 ];
 
