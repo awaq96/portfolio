@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fef9e7;
+  --foreground: #0d0f1e;
 }
 
 @theme {
@@ -26,8 +26,8 @@
 
 /* Declared after the media query so it wins the cascade when user manually picks light */
 .light {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fef9e7;
+  --foreground: #0d0f1e;
 }
 
 body {
