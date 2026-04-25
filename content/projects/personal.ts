@@ -1,4 +1,4 @@
-export interface SideProject {
+export interface PersonalProject {
   title: string;
   description: string;
   tags: string[];
@@ -6,7 +6,7 @@ export interface SideProject {
   metrics?: string[];
 }
 
-export const sideProjects: SideProject[] = [
+export const personalProjects: PersonalProject[] = [
   {
     title: "Financials.AI",
     description:

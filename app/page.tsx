@@ -1,6 +1,6 @@
 import Intro from "./components/home/Intro";
 import EnterpriseSection from "./components/home/EnterpriseSection";
-import SideProjectsSection from "./components/home/SideProjectsSection";
+import PersonalProjectsSection from "./components/home/PersonalProjectsSection";
 import GTProjectsSection from "./components/home/GTProjectsSection";
 
 export default function Home() {
@@ -9,7 +9,7 @@ export default function Home() {
       <Intro />
       <EnterpriseSection />
       <GTProjectsSection />
-      <SideProjectsSection />
+      <PersonalProjectsSection />
     </main>
   );
 }
