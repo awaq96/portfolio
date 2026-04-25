@@ -23,7 +23,7 @@ export const gtProjects: GTProject[] = [
     institution: "Georgia Tech",
     period: "Fall 2025",
     description:
-      "Capstone project building two trading systems for JPM. A manual rule-based strategy and an ML strategy learner using the same four technical indicators. Both evaluated in and out of sample against a buy and hold benchmark.",
+      "\nCapstone project building two trading systems for JPM. A manual rule-based strategy and an ML strategy learner using the same four technical indicators. Both evaluated in and out of sample against a buy and hold benchmark.",
     tags: ["Python", "NumPy", "Pandas", "Machine Learning","Random Forest", "Technical Analysis"],
     metrics: ["Learner: +30.8% in sample", "Learner: +8.2%  out of sample", "Benchmark: −8.4%  out of sample"],
     sections: [

@@ -14,7 +14,7 @@ export default function ProjectCard({ title, description, tags, metrics, href }:
   const content = (
     <>
       <h3 className="font-medium">{title}</h3>
-      <p className="text-sm text-foreground/60 flex-1 leading-relaxed">{description}</p>
+      <p className="text-sm text-foreground/60 flex-1 leading-relaxed whitespace-pre-line">{description}</p>
       {metrics && metrics.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {metrics.map((m) => (
