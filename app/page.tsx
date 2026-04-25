@@ -8,8 +8,8 @@ export default function Home() {
     <main>
       <Intro />
       <EnterpriseSection />
-      <SideProjectsSection />
       <GTProjectsSection />
+      <SideProjectsSection />
     </main>
   );
 }
