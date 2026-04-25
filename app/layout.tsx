@@ -33,6 +33,8 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
+        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0d0f1e" />
+        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
         <script dangerouslySetInnerHTML={{ __html: `(function(){var t=localStorage.getItem('theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;var dark=t==='dark'||(!t);document.documentElement.classList.add(dark?'dark':'light');})();` }} />
       </head>
       <body className="min-h-full flex flex-col">
