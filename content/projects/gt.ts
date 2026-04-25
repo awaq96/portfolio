@@ -23,7 +23,7 @@ export const gtProjects: GTProject[] = [
     institution: "Georgia Tech",
     period: "Fall 2025",
     description:
-      "Capstone project building two trading systems for JPM. A manual rule-based strategy and an ML strategy learner using the same four technical indicators.",
+      "Capstone project building two trading systems for JPM. A manual rule-based strategy and an ML strategy learner using the same four technical indicators. Both evaluated in and out of sample against a buy and hold benchmark.",
     tags: ["Python", "NumPy", "Pandas", "Machine Learning","Random Forest", "Technical Analysis"],
     metrics: ["Learner: +30.8% in sample", "Learner: +8.2%  out of sample", "Benchmark: −8.4%  out of sample"],
     sections: [
@@ -84,9 +84,9 @@ The mechanism is straightforward: at impact=0.0 the LONG and SHORT thresholds ar
     institution: "Georgia Tech",
     period: "Spring 2026",
     description:
-      "Group project analyzing 500,000 emails to discover evidence of market manipulation during the California energy crisis. A four phase pipeline combining network analysis, temporal filtering, custom NLP lexicons, and composite risk scoring to narrow the corpus to the 50 highest risk emails.",
+      "Group project analyzing 500,000 Enron emails for evidence of market manipulation during the California energy crisis. Four phase pipeline: network graph analysis, temporal filtering, custom NLP lexicons, and composite risk scoring.",
     tags: ["Python", "NetworkX", "NLP", "VADER", "Pandas", "NumPy", "Regex"],
-    metrics: ["500K emails processed", "4 phase cascading funnel", "18 convicted individuals cross referenced"],
+    metrics: ["500K emails processed", "4 phase cascading funnel", "18 convicted individuals"],
     sections: [
       {
         heading: "Overview",
@@ -145,7 +145,7 @@ The paper also identified several areas for future improvement: replacing the st
     institution: "Georgia Tech",
     period: "Spring 2026",
     description:
-      "Implemented k-means clustering and a full multivariate Gaussian Mixture Model with expectation maximization from scratch in NumPy. Trained on Van Gogh's Starry Night to group pixels by color similarity, then extended to 3D point cloud segmentation. Full vectorization required: the E step runs in 37ms, the loop equivalent takes hours.",
+      "Implemented k-means and a full multivariate Gaussian Mixture Model with expectation maximization from scratch in NumPy. Applied to Van Gogh's Starry Night and 3D point cloud segmentation. Vectorized E step runs in 37ms, the loop equivalent takes hours.",
     tags: ["Python", "NumPy", "Unsupervised Learning", "EM Algorithm", "Gaussian Mixture Models", "Image Processing"],
     metrics: ["Full EM from scratch", "Starry Night + 3D point cloud", "Vectorized: 37ms per E step"],
     sections: [
