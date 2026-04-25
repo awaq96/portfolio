@@ -54,48 +54,14 @@ When the job is done, a push notification appears in the app's global notificati
     ],
   },
   {
-    slug: "att-cell-tower-calculator-brief",
-    title: "Real Estate Rights Calculator [Brief]",
+    slug: "att-cell-tower-calculator",
+    title: "Real Estate Rights Calculator",
     company: "AT&T",
     period: "2023 – Present",
     description:
-      "Rebuilt a legacy tool used by RF design engineers to verify cell tower designs stay within their square inch lease agreements across 70,000+ sites.",
-    tags: ["Java", "Spring Boot", "Kafka", "Oracle", "Apache POI"],
-    metrics: ["70K+ cell sites", "$5M in prevented overages", "$150K annual savings", "1 min to 20 sec"],
-    sections: [
-      {
-        heading: "Overview",
-        content: `The Real Estate Rights Calculator (RERC) is a tool used by RF design engineers to verify that a cell tower design stays within the square inch allotment in AT&T's lease agreements. On a shared tower, multiple carriers each have a designated RAD Center where their antennas are installed, and each carrier has a contractually defined amount of space they can use. A design that goes over that limit risks interference with neighboring carriers and triggers fees or forces renegotiation.
-
-RERC takes an engineer's RFDS (Radio Frequency Data Sheet) as input, calculates the total square inch usage of the design, and tells the connected design tool whether the design is compliant. Catching an overage early is critical. If it surfaces further down the line, fixing it means redesigning the site, paying fees, or renegotiating lease agreements.`,
-      },
-      {
-        heading: "The Challenge",
-        content: `The RERC had been owned by another team and built as a MuleSoft API backed by a 1,500-line Oracle stored procedure that calculated equipment square inches one piece at a time. It had known miscalculation issues and was slow to support new features. When our team took ownership, I made the case to rebuild rather than lift-and-shift: our existing infrastructure was built for Java Spring Boot, moving logic out of a stored procedure into Java would make it testable and maintainable, and we could eliminate the MuleSoft licensing cost. We agreed on a 3-month timeline and a middle ground: migrate to Spring Boot and refactor the critical calculation logic, while keeping the Oracle database.`,
-      },
-      {
-        heading: "What I Built",
-        content: `I built the new RERC service solo using a test-driven approach. The main architectural change was parallelizing the equipment calculations. The original stored procedure calculated each equipment piece sequentially. I refactored this so all calculations run concurrently and aggregate once they are complete, cutting the API response time from 1 minute to 20 seconds.
-
-While rebuilding the logic I found several underestimation bugs in the original calculations. Designs that appeared compliant were actually over their square inch allotment. These fixes were a key part of the accuracy improvements that drove the post-launch outcome.
-
-I also replaced a fragile database link to the Equipment Catalog with a Kafka-based integration. The old DB link was unreliable and often returned stale equipment dimensions. Now when the catalog team updates a dimension, an event is published and RERC updates its local copy in real time, with a local cache of the most commonly used equipment for faster lookups.`,
-      },
-      {
-        heading: "Outcome",
-        content: `The service launched defect-free with 90% code coverage on a 3-month timeline. Cutting the MuleSoft license and improving calculation efficiency reduced annual operational costs by $150K. After launch, all in-progress RFDS across AT&T were re-run through the new tool as part of a maintenance audit. The more accurate calculations surfaced $5 million in potential overage fees, rework costs, and re-engineering labor that the old tool would have missed.`,
-      },
-    ],
-  },
-  {
-    slug: "att-cell-tower-calculator-detailed",
-    title: "Real Estate Rights Calculator [Detailed]",
-    company: "AT&T",
-    period: "2023 – Present",
-    description:
-      "Rebuilt a legacy tool used by RF design engineers to verify cell tower designs stay within their square inch lease agreements across 70,000+ sites.",
-    tags: ["Java", "Spring Boot", "Kafka", "Oracle", "Apache POI"],
-    metrics: ["70K+ cell sites", "$5M in prevented overages", "$150K annual savings", "1 min to 20 sec"],
+      "Rebuilt a legacy tool used by RF engineers, ensuring cell tower designs comply with square-inch lease agreements across 70,000+ sites.",
+    tags: ["Java", "Spring Boot", "Kafka", "Oracle"],
+    metrics: ["70K+ cell sites", "$5M in prevented penalties", "$150K operational savings"],
     sections: [
       {
         heading: "Overview",
