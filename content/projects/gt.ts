@@ -138,4 +138,63 @@ The paper also identified several areas for future improvement: replacing the st
       },
     ],
   },
+  {
+    slug: "ai-expectation-maximization",
+    title: "Image Segmentation with Expectation Maximization",
+    course: "CS 6601: Artificial Intelligence",
+    institution: "Georgia Tech",
+    period: "Spring 2026",
+    description:
+      "Implemented k-means clustering and a full multivariate Gaussian Mixture Model with expectation maximization from scratch in NumPy. Trained on Van Gogh's Starry Night to group pixels by color similarity, then extended to 3D point cloud segmentation. Full vectorization required: the E step runs in 37ms, the loop equivalent takes hours.",
+    tags: ["Python", "NumPy", "Unsupervised Learning", "EM Algorithm", "Gaussian Mixture Models", "Image Processing"],
+    metrics: ["Full EM from scratch", "Starry Night + 3D point cloud", "Vectorized: 37ms per E step"],
+    sections: [
+      {
+        heading: "Overview",
+        content: `The assignment covers unsupervised learning through image segmentation in CS 6601 at Georgia Tech. The goal is to take a raw RGB image, group its pixels into k color clusters, and return a compressed version where every pixel is replaced by the mean color of its assigned component. The same algorithms run on 3D point cloud data to segment objects by spatial region.
+
+There are five graded parts: a k-means baseline, a full multivariate Gaussian Mixture Model, two model improvements, and a Bayesian Information Criterion implementation for automatic component selection. All code had to run within 10 minutes on the autograder. A naive loop over each pixel takes hours on a full resolution image. Full NumPy vectorization was required across every core function.`,
+      },
+      {
+        heading: "k-means Baseline",
+        content: `k-means is the starting point. The implementation has three functions: get_initial_means() draws k random pixel values as starting centroids without replacement, k_means_step() assigns every pixel to its nearest centroid and recomputes cluster means, and k_means_segment() iterates k_means_step() until cluster assignments stop changing, then replaces each pixel's RGB values with its centroid color.
+
+The vectorized distance computation in k_means_step() is the key performance decision. The expression X[:, None, :] - means[None, :, :] creates a broadcast difference of shape (m, k, 3), and np.linalg.norm(..., axis=2) collapses the color channels to produce an (m, k) distance matrix in one operation. np.argmin on that matrix gives cluster assignments for all m pixels simultaneously. Without this the 10 minute autograder limit is not achievable. The benchmarked runtime for k_means_segment on the Starry Night image is roughly 6.5 seconds.`,
+      },
+      {
+        heading: "Gaussian Mixture Model",
+        content: `A Gaussian Mixture Model represents the image as a weighted sum of k multivariate Gaussians, each defined by a mean vector (MU), a covariance matrix (SIGMA), and a mixing coefficient (PI). Rather than hard assigning each pixel to exactly one cluster, the GMM assigns each pixel a soft responsibility score for every component. The component with the highest responsibility determines the pixel's final segment.
+
+The model has four parameter arrays: k component means of shape (k x 3) for RGB, k covariance matrices of shape (k x 3 x 3), k mixing coefficients summing to 1, and a responsibility matrix of shape (k x m) tracking each pixel's affinity for each component.
+
+Initialization sets each component mean to a randomly sampled pixel, computes the initial covariances from those means using compute_sigma(), and sets mixing coefficients to a uniform 1/k. compute_sigma() is implemented as a loop over k components, each using the closed form outer product formula: the covariance for component i is (X - MU[i]).T @ (X - MU[i]) / m.`,
+      },
+      {
+        heading: "EM Implementation",
+        content: `The EM algorithm alternates between two steps until convergence.
+
+The E step computes the responsibility of each Gaussian component for each pixel. For component i and pixel j, the responsibility is PI[i] times N(x_j; MU[i], SIGMA[i]), normalized across all components so responsibilities sum to 1 per pixel. N() is the multivariate Gaussian probability density function. The exponent is computed as 0.5 times the sum of (difference @ inv_sigma) * difference along the feature axis, which avoids materializing the full (m x m) intermediate matrix that naive matrix multiplication would produce. This is the most numerically sensitive part of the implementation: a shape mismatch here causes the autograder to allocate over 100 GiB and crash.
+
+The M step re-estimates all parameters from the updated responsibilities. The new mean for component i is the responsibility weighted average of all pixels. The new covariance is the responsibility weighted outer product of pixel deviations from the updated mean. The new mixing coefficient is the sum of responsibilities for component i divided by total pixels. All three updates are closed form with no gradient descent. One full training run typically requires 15 to 20 iterations and converges in under 30 seconds with vectorization.
+
+Log likelihood is computed as the sum over all pixels of the log of the total weighted probability under the model. The convergence condition fires when the new log likelihood is within 10% of the previous value for 10 consecutive iterations.`,
+      },
+      {
+        heading: "Improved Initialization and Convergence",
+        content: `The baseline GMM uses random initialization: k pixels are drawn at random as starting means. This works but is sensitive to bad draws where two initial means land in the same color region and a third is never assigned enough pixels to represent a real cluster.
+
+The improved initialization uses one step of k-means to seed the Gaussian means instead. k-means tends to spread the initial means across distinct color regions because it iteratively pushes centroids apart. After k-means produces the means, compute_sigma() recalculates the covariances from scratch and mixing coefficients reset to uniform. The reset is intentional: GMMs tend to converge to elongated covariances during early training, and resetting those parameters before full EM begins reduces the chance of landing in a poor local maximum.
+
+The new convergence function checks all three parameter sets instead of just the log likelihood. If all values in MU, SIGMA, and PI stay within 10% of their previous iteration values for 10 consecutive iterations, training stops. This catches cases where the likelihood plateaus but individual parameters are still drifting, which the default check would miss.`,
+      },
+      {
+        heading: "BIC and Point Cloud Segmentation",
+        content: `The Bayesian Information Criterion penalizes model complexity to prevent overfitting on the number of components. A GMM with k=20 will always fit the data better than one with k=3, but the extra components may be modeling noise rather than real color structure. BIC adds a penalty proportional to the number of free parameters times the log of the number of data points.
+
+For a GMM with k components on 3 dimensional RGB data, the free parameters are the means (k times 3), the covariance entries (k times 9, since each covariance matrix is 3x3), and the mixing coefficients (k minus 1, since they sum to 1). The full formula is: BIC = number_of_parameters times ln(m) minus 2 times log_likelihood. Lower BIC is better. The implementation runs training for several values of k, computes BIC for each, and selects the k with the lowest score.
+
+The final section extends the pipeline to 3D point cloud data. XYZ spatial coordinates replace RGB color values, and the same GMM and EM code runs without modification. Points that are spatially proximate cluster together, producing segmented objects and backgrounds from raw depth sensor output. The visual output is a point cloud where each segment is rendered in a distinct color, showing the algorithm generalizing cleanly from 2D image compression to 3D spatial partitioning.`,
+      },
+    ],
+  },
 ];
