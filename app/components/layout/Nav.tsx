@@ -126,20 +126,18 @@ export default function Nav() {
                 </Link>
               )
             )}
-            <div className="flex items-center gap-4 pt-1">
-              {socials.map((s) => (
-                <a
-                  key={s.label}
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={s.label}
-                  className="text-foreground/60 hover:text-foreground transition-colors"
-                >
-                  {s.icon}
-                </a>
-              ))}
-            </div>
+            {socials.map((s) => (
+              <a
+                key={s.label}
+                href={s.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-foreground/60 hover:text-foreground transition-colors"
+              >
+                {s.icon}
+                {s.label}
+              </a>
+            ))}
           </div>
         </div>
       )}
