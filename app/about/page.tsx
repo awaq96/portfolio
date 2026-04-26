@@ -38,7 +38,7 @@ export default function AboutPage() {
         </h1>
         <p className="text-foreground/60 leading-relaxed max-w-xl">
           I grew up in Houston and am shaped by the city, the heat, and the culture.
-          From a young age I was obsessed with puzzles: Sudokus, Word Searches, the NYT Mini,
+          From a young age I was obsessed with puzzles. Sudokus, Word Searches, the NYT Mini,
           anything with a clean answer hiding behind a messy problem. That same
           itch to understand the <em>how</em> and <em>why </em> behind things
           naturally pulled me toward engineering. Big, complex problems with no
@@ -61,7 +61,7 @@ export default function AboutPage() {
             </p>
             <p>
               At AT&T I&apos;ve had the chance to work across a wide range of hard
-              problems: telecom infrastructure, resource management, large scale
+              problems like telecom infrastructure, resource management, large scale
               contracts. The kind of work where the blast radius of a bad
               decision is very real.
             </p>
@@ -101,9 +101,9 @@ export default function AboutPage() {
           <p className="text-foreground/70 leading-relaxed mb-10">
             When I&apos;m not at a keyboard, I&apos;m usually behind a lens. I love
             traveling, both to other countries and out into nature,
-            photographing whatever I find along the way. Like a lot of people
-            in their late twenties, I&apos;ve also gotten into running and I&apos;m
-            aiming to knock out a half marathon this year.
+            photographing whatever I find along the way. Like many people
+            in their late twenties, I&apos;ve also gotten into running and am
+            aiming to run a half marathon this year.
           </p>
 
           {/* Photo grid — drop your images into /public/photos/ */}
@@ -128,7 +128,7 @@ export default function AboutPage() {
         {/* Contact */}
         <section className="pt-4 border-t border-foreground/10">
           <p className="text-foreground/60 leading-relaxed">
-            Let’s connect! Collaborate, share ideas, or just talk.{" "}
+            Let’s connect! Collaborate, share ideas, or chat about anything.{" "}
             <a
               href="mailto:contact@waqlabs.ai"
               className="text-foreground hover:underline underline-offset-4"
