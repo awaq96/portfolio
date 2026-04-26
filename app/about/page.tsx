@@ -128,7 +128,7 @@ export default function AboutPage() {
         {/* Contact */}
         <section className="pt-4 border-t border-foreground/10">
           <p className="text-foreground/60 leading-relaxed">
-            Let’s connect. Collaborate, share ideas, or just talk tech.{" "}
+            Let’s connect! Collaborate, share ideas, or just talk.{" "}
             <a
               href="mailto:contact@waqlabs.ai"
               className="text-foreground hover:underline underline-offset-4"
