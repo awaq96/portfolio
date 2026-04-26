@@ -6,9 +6,9 @@ export const metadata = {
 };
 
 const photos = [
-  { src: "/photos/hobby-1.jpg", alt: "Photo 1" },
-  { src: "/photos/hobby-2.jpg", alt: "Photo 2" },
-  { src: "/photos/hobby-3.jpg", alt: "Photo 3" },
+  { src: "/photos/hobby-1.JPG", alt: "Photo 1" },
+  { src: "/photos/hobby-2.JPG", alt: "Photo 2" },
+  { src: "/photos/hobby-3.JPG", alt: "Photo 3" },
   { src: "/photos/hobby-4.jpg", alt: "Photo 4" },
   { src: "/photos/hobby-5.jpg", alt: "Photo 5" },
   { src: "/photos/hobby-6.jpg", alt: "Photo 6" },
