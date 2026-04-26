@@ -19,7 +19,7 @@ export const enterpriseProjects: EnterpriseProject[] = [
     slug: "att-payment-platform",
     title: "Mission-Critical Payment Platform",
     company: "AT&T",
-    period: "2023 – Present",
+    period: "2021 – Present",
     description:
       "Backend systems for a platform managing $6B in annual payments and 250,000+ enterprise contracts across AT&T's infrastructure leases.",
     tags: ["Java", "Spring Boot", "Angular", "Azure", "REST APIs", "Apache POI"],
@@ -57,7 +57,7 @@ When the job is done, a push notification appears in the app's global notificati
     slug: "att-cell-tower-calculator",
     title: "Real Estate Rights Calculator",
     company: "AT&T",
-    period: "2023 – Present",
+    period: "2021 – Present",
     description:
       "Rebuilt a legacy tool used by RF engineers, ensuring cell tower designs comply with square-inch lease agreements across 70,000+ sites.",
     tags: ["Java", "Spring Boot", "Kafka", "Oracle"],
@@ -95,7 +95,7 @@ I also replaced a fragile database link to the Equipment Catalog with a Kafka-ba
     slug: "att-microservices-modernization",
     title: "Agentic Microservices Modernization",
     company: "AT&T",
-    period: "2023 – Present",
+    period: "2021 – Present",
     description:
       "Led a 6-engineer team upgrading 80+ microservices from Java 8 to 17 and Spring Boot 2.x to 3.3, using AI-assisted tooling to cut per-service upgrade time from days to hours.",
     tags: ["Java", "Spring Boot", "Agentic AI", "GitHub Copilot"],
