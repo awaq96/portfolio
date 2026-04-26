@@ -45,25 +45,15 @@ export default function Nav() {
 
         {/* Desktop */}
         <div className="hidden sm:flex items-center gap-6 text-sm">
-          {links.map((l) =>
-            l.external ? (
-              <a
-                key={l.label}
-                href={l.href}
-                className="text-foreground/60 hover:text-foreground transition-colors"
-              >
-                {l.label}
-              </a>
-            ) : (
-              <Link
-                key={l.label}
-                href={l.href}
-                className="text-foreground/60 hover:text-foreground transition-colors"
-              >
-                {l.label}
-              </Link>
-            )
-          )}
+          {links.map((l) => (
+            <Link
+              key={l.label}
+              href={l.href}
+              className="text-foreground/60 hover:text-foreground transition-colors"
+            >
+              {l.label}
+            </Link>
+          ))}
           <div className="flex items-center gap-4">
             {socials.map((s) => (
               <a
@@ -105,27 +95,16 @@ export default function Nav() {
       {open && (
         <div className="sm:hidden border-t border-foreground/10 bg-background">
           <div className="max-w-5xl mx-auto px-6 py-4 flex flex-col gap-4 text-sm">
-            {links.map((l) =>
-              l.external ? (
-                <a
-                  key={l.label}
-                  href={l.href}
-                  className="text-foreground/60 hover:text-foreground transition-colors"
-                  onClick={() => setOpen(false)}
-                >
-                  {l.label}
-                </a>
-              ) : (
-                <Link
-                  key={l.label}
-                  href={l.href}
-                  className="text-foreground/60 hover:text-foreground transition-colors"
-                  onClick={() => setOpen(false)}
-                >
-                  {l.label}
-                </Link>
-              )
-            )}
+            {links.map((l) => (
+              <Link
+                key={l.label}
+                href={l.href}
+                className="text-foreground/60 hover:text-foreground transition-colors"
+                onClick={() => setOpen(false)}
+              >
+                {l.label}
+              </Link>
+            ))}
             {socials.map((s) => (
               <a
                 key={s.label}
