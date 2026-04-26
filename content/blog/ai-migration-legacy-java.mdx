@@ -1,0 +1,84 @@
+---
+title: "How I Used AI to Migrate a Legacy Java Codebase"
+date: "2026-04-26"
+description: "What actually happened when I tried to automate 80 microservice upgrades with GitHub Copilot. What worked, what didn't, and what 70% automation really means in practice."
+readTime: "5 min read"
+---
+
+## The Setup
+
+Our team owned 80 microservices built on Java 8 and Spring Boot 2.x. With both technologies at end of life, we had to upgrade the entire catalog. The initial estimate from our team was 9 to 12 months. Every service needed the same categories of changes. 
+No new business logic or features, just a tedious, necessary, and substantial effort. Fun! 
+
+A Java migration is well documented work that engineers across the industry have done thousands of times before. That's exactly the profile where AI tooling should shine.
+
+I decided to try automating as much of it as possible with AI. We ended up completing the migration in about 3 months instead of 12.
+
+## Before Writing a Single Prompt
+
+The mistake I almost made was jumping straight to prompting. Our codebase was huge and I didn't know anything about the latest version of Java. What am I actually looking to achieve here? How do I determine if the AI produced code actually works? For me, to write prompts that I felt would be meaningful, I first needed to update my own domain knowledge. 
+I manually upgraded a service first. Start to finish. No vibes, just the fundamentals. This was the most important decision I made in the whole project.
+
+This gave me a precise understanding of what actually needed to happen at each step. Not what the migration guide said needed to happen. What *actually* needed to happen for our specific codebase. There's a difference, and that difference is where most automated approaches fail.
+
+After that, I had four clear categories of changes:
+
+- POM updates (Java version, Spring Boot version, dependency replacements)
+- Internal framework removal (incompatible with the latest Java version and on the way to deprecation)
+- Service layer deprecations (javax → jakarta, Date → LocalDateTime, other Spring Boot 3.x API changes)
+- Swagger migration (Springfox → springdoc-openapi)
+
+## Why the Single Prompt Failed
+
+My first attempt was a single prompt. "Here's this service. Upgrade it to Java 21 and Spring Boot 4.0." I included the existing POM and relevant source files and described the expected changes.
+
+The results were consistently inconsistent. The model would handle some of the work correctly but miss things unpredictably. Sometimes the POM updated cleanly, sometimes it didn't change it at all (but very confidently told me it did). Sometimes the javax imports got migrated; sometimes they didn't. The failures weren't always the same, which made them hard to fix systematically.
+
+The problem was scope. When the prompt covers everything at once, the model has to hold too much context simultaneously, and attention becomes unreliable at the edges. The parts of the task it perceived as "core" got handled well. The parts that felt peripheral got dropped. And on different runs, the model determined different things as "core."
+
+The solution was to stop asking it to do everything at once.
+
+## Four Prompts, Four Scopes
+
+I broke the migration into four targeted prompts, each scoped to one category of change. Smaller context led to more reliable output.
+
+**POM updates.** This handled bumping versions and replacing incompatible dependencies. The key to making it reliable was including my manually upgraded POM as a reference. Not as instructions, but as a concrete example of the target state. 
+In hindsight, I think pointing to any concrete example, even if it wasn't my own manual work, would have sufficed. I also explicitly called out the fields the model consistently missed in early runs, which tightened output noticeably.
+
+**Internal framework removal.** This was the trickiest to prompt because the framework wasn't something the model had seen before. I had to explain its purpose, what it was being replaced with, and provide before/after examples. Once that context was in the prompt, results were solid.
+
+**Service layer deprecations.** javax → jakarta, Date API replacements, and other Spring Boot 3.x API changes. This was the most mechanical of the four and worked most reliably. These changes are exhaustively documented in the Spring migration guide, meaning the model had a strong training signal on them.
+
+**Swagger migration.** Springfox to springdoc-openapi: annotation updates, removal of the Docket configuration class, property changes. This was also well documented and reliable. I had found that having the model conduct service and swagger changes together was too much work in one run. It was causing way too many misfires. Moving it out to its own step improved consistency dramatically.
+
+Each prompt ran independently on each service, in sequence. Running all four took less than an hour per service on average.
+
+## The Feedback Loop
+
+70% automation didn't mean the same 70% every time. Different services had edge cases the prompts didn't cover. I kept a shared markdown file where the team logged every manual fix we made after a prompt run. Things the prompts would miss.
+
+I fed this file back into each prompt as an addendum. *"Here are categories of changes that have been missed in previous runs. Make sure to check for these."* This closed some gaps. Others stayed open.
+
+The honest reason we didn't push past 70% was diminishing returns. Getting from 70 to 90 would have required significant prompt iteration and service by service tuning. At that point the manual fixes were faster than the engineering investment to eliminate them.
+
+That's a real lesson about AI automation generally. The last 30% often takes more effort than the first 70%. Know when to stop and just do the work.
+
+## What AI Couldn't Do
+
+There's a category of changes that AI handled poorly regardless of how I prompted. Anything requiring an understanding of what the service actually *did*.
+
+Some services had unusual dependency combinations where the standard migration path didn't apply. Some had custom Spring configurations that interacted with deprecated APIs in non-obvious ways. A few had subtle behavioral differences introduced by the javax → jakarta migration that only surfaced under specific runtime conditions.
+
+The model could apply patterns. It couldn't reason about whether a pattern was applicable in a given specific context. That distinction matters. Every service still needed a human to verify behavior. The time saved was in the mechanical code changes, not in the judgment calls.
+
+If I were to do it again today, I would try adding in service specific documents/context in the planning stage prompt. Our prompts were more technically focused to maintain reusability across 80 services. I think adding this layer of context would fill a lot of gaps we saw with our prompts. 
+
+## The Last Stretch
+
+The final batch of services were the slowest. Nonstandard configurations, no tests left behind by previous owners, and prompts that got you 50% of the way at best. We didn't iterate further. It was faster to finish these edge cases manually.
+
+After we wrapped up, a few other teams picked up the prompts for their own migrations. Some came back with questions that made me realize how much implicit context I'd baked in. Sharing a prompt is not the same as sharing the understanding behind it.
+
+---
+
+The thing I'd tell someone attempting the same project is to invest time upfront in truly understanding the problem. The quality of your automation is bounded by the precision of your understanding. If you don't confidently know what "done" looks like for one case, you can't write prompts that get you there for eighty.

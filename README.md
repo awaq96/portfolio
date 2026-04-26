@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# waqlabs.ai
 
-## Getting Started
+Personal portfolio for Asher Waqar. Built from scratch with Next.js 16 App Router and React 19. No component library. Live at [waqlabs.ai](https://waqlabs.ai).
 
-First, run the development server:
+## Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Framework:** Next.js 16 (App Router), React 19, TypeScript 5
+- **Styles:** Tailwind CSS v4 — uses `@theme` directive, no `tailwind.config.js`
+- **Hosting:** Vercel (Hobby), custom domain via Cloudflare (proxy off)
+- **Font:** Geist via `next/font`
+
+## Project Structure
+
+```
+app/
+  layout.tsx          # Root layout — font, ThemeToggle, Nav, Footer
+  page.tsx            # Homepage — all sections assembled here
+  globals.css         # @theme tokens, base styles
+  components/
+    home/             # Section components (Intro, Enterprise, Side, GT)
+    ui/               # Shared primitives (ProjectCard, SectionHeading, Nav, Footer)
+    layout/           # ThemeToggle
+  work/[slug]/        # Enterprise project detail pages (statically generated)
+  gt/[slug]/          # GT project detail pages (statically generated)
+
+content/
+  projects/
+    enterprise.ts     # AT&T project data
+    gt.ts             # Georgia Tech project data
+    side.ts           # Side project data
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Notable Implementation Details
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+**Dark/light mode without FOUC**
+`ThemeToggle` uses `useSyncExternalStore` and a `MutationObserver` on `document.documentElement` to track the active theme class. This lets the toggle read the real DOM state rather than a React state variable, which avoids the flash-of-unstyled-content problem that comes from `useState` initializing on the server before the client theme is known. Both `.dark` and `.light` classes are explicitly set so the OS media query does not override the user's choice.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**Static detail pages**
+`/work/[slug]` and `/gt/[slug]` use `generateStaticParams` to pre-render one page per project at build time. Project data lives in plain TypeScript files under `content/` — no CMS, no database. Adding a project means adding an entry to the relevant data file.
 
-## Learn More
+**Path alias**
+`@/*` resolves to the project root per `tsconfig.json`, so imports use `@/content/...` and `@/app/components/...` regardless of where the importing file sits.
 
-To learn more about Next.js, take a look at the following resources:
+## Running Locally
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm install
+npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Open [http://localhost:3000](http://localhost:3000).
 
-## Deploy on Vercel
+## Build
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run build
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+All routes are statically generated. The build output shows pre-rendered pages for each enterprise and GT project slug.
