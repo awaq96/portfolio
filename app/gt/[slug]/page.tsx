@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { gtProjects } from "@/content/projects/gt";
+import GTProjectVisual from "@/app/components/ui/GTProjectVisual";
 
 export function generateStaticParams() {
   return gtProjects.map((p) => ({ slug: p.slug }));
@@ -60,6 +61,7 @@ export default async function GTProjectPage({ params }: { params: Promise<{ slug
         {project.sections.map((s) => (
           <section key={s.heading}>
             <h2 className="text-lg font-semibold mb-4">{s.heading}</h2>
+            {s.visual && <GTProjectVisual visual={s.visual} />}
             <div className="space-y-4">
               {s.content.split("\n\n").map((paragraph, i) => (
                 <p key={i} className="text-foreground/70 leading-relaxed">
