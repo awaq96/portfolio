@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { enterpriseProjects } from "@/content/projects/enterprise";
+import ProjectVisual from "@/app/components/ui/ProjectVisual";
 
 export function generateStaticParams() {
   return enterpriseProjects.map((p) => ({ slug: p.slug }));
@@ -58,6 +59,7 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
         {project.sections.map((s) => (
           <section key={s.heading}>
             <h2 className="text-lg font-semibold mb-4">{s.heading}</h2>
+            {s.visual && <ProjectVisual visual={s.visual} />}
             <div className="space-y-4">
               {s.content.split("\n\n").map((paragraph, i) => (
                 <p key={i} className="text-foreground/70 leading-relaxed">
